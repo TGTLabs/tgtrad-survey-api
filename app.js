@@ -22,12 +22,14 @@ app.use(morgan(loggingFormat));
 app.use(compress());
 
 //enable body-parser
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // view engine setup
 app.set('views', (__dirname + '/views'));
 app.set('view engine', 'jade');
 
 // setup routes
+require('./routes/root')(app);
 require('./routes/login')(app);
 require('./routes/action')(app);
 require('./routes/question')(app);
