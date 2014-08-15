@@ -8,6 +8,7 @@ var express = require("express");
 var serveStatic = require('serve-static');
 var morgan = require('morgan');
 var compress = require('compression');
+var bodyParser = require('body-parser');
 
 // create server
 var app = express();
@@ -20,12 +21,16 @@ app.use(morgan(loggingFormat));
 // enable gzip compression
 app.use(compress());
 
+//enable body-parser
+app.use(bodyParser());
 // view engine setup
 app.set('views', (__dirname + '/views'));
 app.set('view engine', 'jade');
 
 // setup routes
 require('./routes/login')(app);
+require('./routes/action')(app);
+require('./routes/question')(app);
 
 // static content
 app.use('/build', serveStatic(__dirname + '/build'));

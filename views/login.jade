@@ -3,7 +3,10 @@ html
     head
         title #{title}
     body
-        header
-            h1 #{title}
-        footer
-            p Copyright
+        div#contact-area
+            form(method='post',action='')
+                label(for='zid') Z Id:
+                input(type='text',name='zid',id='zid')
+                label(for='email') Password:
+                input(type='text',name='password',id='password')
+                input(type='submit',name='submit',value='Submit').submit-button

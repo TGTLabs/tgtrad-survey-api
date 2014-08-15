@@ -4,4 +4,9 @@ module.exports = function register(app) {
                 title: 'loginpage'
             });
     });
+    app.post('/login', function(req, res) {
+      if(req.body.zid.indexOf('z') == 0 ){
+        res.redirect('/action')
+      }
+    });
 };
