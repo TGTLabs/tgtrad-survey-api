@@ -1,0 +1,34 @@
+doctype strict
+html
+    head
+        title #{title}
+    body
+        div#contact-area
+            form(method='post',action='')
+                label(for='maxResp') Maximum Responses:
+                input(type='text',name='maxResp',id='maxResp')
+                label(for='owner') Survey Owner:
+                input(type='text',name='owner',id='owner')
+                label(for='campaign') Campaign:
+                input(type='text',name='campaign',id='campaign')
+                label(for='costcenter') Cost Center:
+                input(type='text',name='costcenter',id='costcenter')
+                label(for='worth') Response Worth:
+                input(type='text',name='worth',id='worth')
+                br
+                label(for='question1') Question 1:
+                input(type='text',name='question1',id='question1')
+                label(for='answer11') Answer:
+                input(type='text',name='answer11',id='answer11')
+                label(for='answer12') Answer:
+                input(type='text',name='answer12',id='answer12')
+                br
+                label(for='question2') Question 2:
+                input(type='text',name='question2',id='question2')
+                label(for='answer21') Answer:
+                input(type='text',name='answer21',id='answer21')
+                label(for='answer22') Answer:
+                input(type='text',name='answer22',id='answer22')
+
+
+                input(type='submit',name='submit',value='Submit').submit-button
