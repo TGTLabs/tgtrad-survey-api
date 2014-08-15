@@ -34,6 +34,7 @@ require('./routes/login')(app);
 require('./routes/action')(app);
 require('./routes/question')(app);
 require('./routes/createSurvey')(app);
+require('./routes/survey')(app);
 
 // static content
 app.use('/build', serveStatic(__dirname + '/build'));
