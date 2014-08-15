@@ -13,7 +13,7 @@ module.exports = function register(app) {
                 var deferred = Q.defer();
 
                 db.collection('survey')
-                    .findOne({ surveyId: surveyId }, function (err, survey) {
+                    .findOne({ surveyID: surveyId }, function (err, survey) {
                         if (err) {
                             deferred.reject(err);
                         } else {
