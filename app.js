@@ -25,7 +25,7 @@ app.set('views', (__dirname + '/views'));
 app.set('view engine', 'jade');
 
 // setup routes
-require('./routes/heatmap')(app);
+require('./routes/login')(app);
 
 // static content
 app.use('/build', serveStatic(__dirname + '/build'));
