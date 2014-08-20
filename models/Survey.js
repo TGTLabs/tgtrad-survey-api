@@ -18,4 +18,4 @@ var Survey = new Schema({
 
 Survey.index({ name: 1, owner: 1 }, { unique: true });
 
-module.exports = mongoose.model('surveys', Survey);
+module.exports = mongoose.model('Survey', Survey);
