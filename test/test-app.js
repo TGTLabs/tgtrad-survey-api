@@ -4,13 +4,13 @@
 var should = require('chai').should();
 var supertest = require('supertest');
 
-require('../models');
-var server = require('../lib/server').restify;
-require('../api').register(server);
-
 var mongoose = require('mongoose');
 var mockgoose = require('mockgoose');
 mockgoose(mongoose);
+
+require('../models');
+var server = require('../lib/server').restify;
+require('../api').register(server);
 
 var Survey = mongoose.model('Survey');
 
