@@ -13,7 +13,6 @@ require('./lib/db');
 // SETUP THE MODELS
 require('./models');
 
-
 /*********************
  *  REST Endpoints
  *********************/

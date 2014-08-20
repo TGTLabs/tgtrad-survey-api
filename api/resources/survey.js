@@ -56,7 +56,7 @@ var removeSurveyById = function (req, res, next) {
       res.status(404);
       res.send({message: "Not found"});
     } else {
-      res.send({message: "removed"});
+      res.send(survey);
     }
 
     return next();
@@ -84,6 +84,13 @@ var getSurveys = function (req, res, next) {
 var updateSurveyById = function (req, res, next) {
   res.cache('public', {maxAge: 300});
 
+  if (!req.body) {
+    res.status(400);
+    res.send({message: 'Missing body'});
+
+    return next();
+  }
+
   Survey.findById(req.params.id, function (err, survey) {
     if (err) {
       res.status(400);
@@ -109,7 +116,7 @@ var updateSurveyById = function (req, res, next) {
       survey.save(function (err, survey) {
         if (err) {
           res.status(400);
-          res.send({message: err.message})
+          res.send({message: err.message});
         } else {
           res.send(survey);
         }
@@ -124,6 +131,13 @@ var updateSurveyById = function (req, res, next) {
 
 var patchSurveyById = function (req, res, next) {
   res.cache('public', {maxAge: 300});
+
+  if (!req.body) {
+    res.status(400);
+    res.send({message: 'Missing body'});
+
+    return next();
+  }
 
   Survey.findById(req.params.id, function (err, survey) {
     if (err) {
@@ -149,7 +163,7 @@ var patchSurveyById = function (req, res, next) {
       survey.save(function (err, survey) {
         if (err) {
           res.status(400);
-          res.send({message: err.message})
+          res.send({message: err.message});
         } else {
           res.send(survey);
         }
@@ -166,12 +180,19 @@ var patchField = function (object, fieldName, value) {
   if (_.isNull(value)) {
     object[fieldName] = undefined;
   } else if (value) {
-    object[fieldName] = value
+    object[fieldName] = value;
   }
 };
 
 var addSurvey = function (req, res, next) {
   res.cache('public', {maxAge: 300});
+
+  if (!req.body) {
+    res.status(400);
+    res.send({message: 'Missing body'});
+
+    return next();
+  }
 
   var newSurvey = {
     name: req.body.name,
