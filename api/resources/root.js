@@ -1,9 +1,16 @@
 "use strict";
 
-var pkg = require('../package');
+var pkg = require('../../package');
 
 /*********************
  *  REST Endpoints
+ *********************/
+function register(server) {
+  server.get("/", getVersion);
+}
+
+/*********************
+ *  Resource functions
  *********************/
 var getVersion = function (req, res, next) {
   res.cache('public', { maxAge: 300});
@@ -17,6 +24,6 @@ var getVersion = function (req, res, next) {
  *********************/
 
 module.exports = {
-  getVersion: getVersion
+  register: register
 };
 

@@ -35,6 +35,7 @@
     "gulp-mocha": "^1.0.0",
     "gulp-nodemon": "^1.0.4",
     "jshint-stylish": "^0.4.0",
+    "mockgoose": "^1.10.2",
     "supertest": "^0.13.0"
   }
 }
