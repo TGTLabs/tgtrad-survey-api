@@ -3,21 +3,24 @@
 
 var should = require('chai').should();
 var supertest = require('supertest');
+
+require('../models');
+var server = require('../lib/server').restify;
+require('../api').register(server);
+
 var mongoose = require('mongoose');
 var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
-var server = require('../lib/server').restify;
-var Survey = require('../domain/survey');
-require('../api').register(server);
+var Survey = mongoose.model('Survey');
 
 describe("API endpoints", function () {
-  // MOCK DB
-//  beforeEach(function (done) {
-//    mockgoose.reset();
-//
-//    new Survey({name: 'my test name', _id: '53f393286ac59cd02aa379b7'}).save();
-//  });
+  beforeEach(function (done) {
+    mockgoose.reset();
+    Survey.create({name: 'my test name', owner: 'donnie', _id: '53f3ab80432f102a2f06d331'}, function(err, model) {
+      return done(err);
+    });
+  });
 
   describe("/", function () {
     it("GET 200", function (done) {
@@ -45,7 +48,7 @@ describe("API endpoints", function () {
   describe("/survey", function () {
     it("GET 200 byId", function (done) {
       supertest(server)
-        .get('/survey/someId')
+        .get('/survey/53f3ab80432f102a2f06d331')
         .set('Accept', 'application/json')
         .expect(200)
         .expect('Cache-Control', "public, max-age=300")
@@ -57,8 +60,8 @@ describe("API endpoints", function () {
           var body = response.body;
           body.should.be.an('object');
 
-          body.should.have.property('name');
-          body.should.have.property('owner');
+          body.should.have.property('name', 'my test name');
+          body.should.have.property('owner', 'donnie');
 
           return done();
         });

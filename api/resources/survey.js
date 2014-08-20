@@ -1,6 +1,7 @@
 "use strict";
 
-var Survey = require('../../domain/Survey');
+var mongoose = require("mongoose");
+var Survey = mongoose.model('Survey');
 
 /*********************
  *  REST Endpoints

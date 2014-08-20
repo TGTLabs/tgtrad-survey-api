@@ -1,13 +1,20 @@
 "use strict";
 
+// perform environment variable initialization as soon as possible so other libraries may benefit
+var dotenv = require('dotenv');
+dotenv.load();
+
 var server = require('./lib/server');
 var thisPackage = require('./package');
-var db = require('./lib/db');
 
-/*********************
- *  REST Endpoints
- *********************/
-require('api').register(server.restify);
+// INIT DB Connection
+require('./lib/db');
+
+// SETUP THE MODELS
+require('./models');
+
+// ADD THE ENDPOINTS
+require('./api').register(server.restify);
 
 // START SERVER
 var port = process.env.PORT || 5000;
