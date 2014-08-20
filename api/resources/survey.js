@@ -4,8 +4,8 @@ var mongoose = require("mongoose");
 var Survey = mongoose.model('Survey');
 
 /*********************
-*  REST Endpoints
-*********************/
+ *  REST Endpoints
+ *********************/
 function register(server) {
   server.get("/survey/:id", getSurveyById);
   server.get("/surveys", getSurveys);
@@ -13,63 +13,66 @@ function register(server) {
 }
 
 /*********************
-*  Resource functions
-*********************/
+ *  Resource functions
+ *********************/
 var getSurveyById = function (req, res, next) {
-  res.cache('public', { maxAge: 300});
+  res.cache('public', { maxAge: 300 });
 
   Survey.findById(req.params.id).lean().exec(function (err, survey) {
-    if(err) {
-      console.log(err);
+    if (err) {
       res.status(400);
-      res.send("ID does not match correct format");
-    } else if (!survey){
+      if (err.name && err.name === "CastError") {
+        res.send({ message: 'Bad id'});
+      } else {
+        res.send({ message: err.message});
+      }
+    } else if (!survey) {
       res.status(404);
-      res.send("Not found");
+      res.send({message: "Not found"});
     } else {
       res.send(survey);
     }
+
     return next();
   });
 };
 
-var getSurveys = function(req, res, next) {
-  res.cache('public', { maxAge: 300});
+var getSurveys = function (req, res, next) {
+  res.cache('public', { maxAge: 300 });
 
   Survey.find({}).lean().exec(function (err, surveys) {
-    if(err) {
-      console.log(err);
+    if (err) {
       res.status(400);
-      res.send("ID does not match correct format");
-    } else if (!surveys){
+      res.send({ message: err.message});
+    } else if (!surveys) {
       res.status(404);
-      res.send("Not found");
+      res.send({message: "Not found"});
     } else {
       res.send(surveys);
     }
+
     return next();
   });
 };
 
-var postSurvey = function(req, res,next){
-res.cache('public', {maxAge: 300});
+var postSurvey = function (req, res, next) {
+  res.cache('public', {maxAge: 300});
 
-console.log(req.body);
-  var newSurvey = new Survey({
+  var newSurvey = {
     name: req.body.name,
     owner: req.body.owner,
     maxResponses: req.body.maxResponses,
     campaign: req.body.campaign,
     costCenterId: req.body.costCenterId,
-    netWorth: req.body.netWorth,
-  });
+    netWorth: req.body.netWorth
+  };
 
   Survey.create(newSurvey, function (err, survey) {
-     console.log(err);
-     res.send(survey);
-  });
+    res.send(survey);
 
-}
+    return next();
+  });
+};
 
 module.exports = {
   register: register
