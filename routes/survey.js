@@ -1,6 +1,6 @@
 "use strict";
 
-var Survey = require('../model/Survey');
+var Survey = require('./model/Survey');
 var _ = require('lodash');
 
 module.exports = function register(app) {
@@ -37,7 +37,7 @@ module.exports = function register(app) {
       if (!survey) {
         req.flash('errors', 'survey not found');
         res.redirect('/survey');
-        return
+        return;
       }
 
       res.render('survey/details', {
@@ -91,7 +91,7 @@ module.exports = function register(app) {
           _.each(req.body, function (val, key) {
             if ('op_addQuestion' === key) {
 
-              survey.questions.push({text: '', answers: ['', '']})
+              survey.questions.push({text: '', answers: ['', '']});
               Survey.save(function (err) {
                 console.log('error');
               });

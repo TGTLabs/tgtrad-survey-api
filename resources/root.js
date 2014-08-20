@@ -12,6 +12,10 @@ var getVersion = function (req, res, next) {
   return next();
 };
 
+/*********************
+ *  Helper Functions
+ *********************/
+
 module.exports = {
   getVersion: getVersion
 };
