@@ -7,7 +7,7 @@ var db = require('./lib/db');
 /*********************
  *  REST Endpoints
  *********************/
-require('api').register(server.restify);
+require('./api').register(server.restify);
 
 // START SERVER
 var port = process.env.PORT || 5000;
