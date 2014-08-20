@@ -9,7 +9,7 @@ var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
 require('../models');
-var server = require('../lib/server').restify;
+var server = require('../lib/server')('mocha-test-server');
 require('../api').register(server);
 
 var Survey = mongoose.model('Survey');

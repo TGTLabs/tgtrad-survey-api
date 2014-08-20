@@ -1,6 +1,6 @@
 "use strict";
 
-var Survey = require('./model/Survey');
+var Survey = require('../models/Survey');
 var _ = require('lodash');
 
 module.exports = function register(app) {

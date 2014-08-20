@@ -4,8 +4,8 @@
 var dotenv = require('dotenv');
 dotenv.load();
 
-var server = require('./lib/server');
 var thisPackage = require('./package');
+var server = require('./lib/server')(thisPackage.description);
 
 // INIT DB Connection
 require('./lib/db');
@@ -14,10 +14,10 @@ require('./lib/db');
 require('./models');
 
 // ADD THE ENDPOINTS
-require('./api').register(server.restify);
+require('./api').register(server);
 
 // START SERVER
 var port = process.env.PORT || 5000;
-server.restify.listen(port, function () {
-  console.log("%s, version %s. Listening on %s", thisPackage.description, thisPackage.version, port);
+server.listen(port, function () {
+  console.log("%s, version %s. Listening on %s", server.name, thisPackage.version, port);
 });
