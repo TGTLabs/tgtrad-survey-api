@@ -3,12 +3,17 @@
 var dotenv = require('dotenv');
 dotenv.load();
 
+var db = require('./lib/db');
 var thisPackage = require('./package');
 var express = require("express");
 var serveStatic = require('serve-static');
 var morgan = require('morgan');
 var compress = require('compression');
 var bodyParser = require('body-parser');
+var _ = require("lodash");
+var cookieParser = require('cookie-parser');
+var flash = require('connect-flash');
+var session = require('express-session');
 
 // create server
 var app = express();
@@ -27,6 +32,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // view engine setup
 app.set('views', (__dirname + '/views'));
 app.set('view engine', 'jade');
+
+// flash messages
+app.use(cookieParser(app.get('title')));
+app.use(session({secret: app.get('title'), resave: false, saveUninitialized: true}));
+app.use(flash());
 
 // setup routes
 require('./routes/root')(app);

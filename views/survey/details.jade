@@ -1,0 +1,50 @@
+doctype strict
+html
+	head
+		title #{title}
+	body
+		if messages
+			for error in messages.errors
+				p.error #{error}
+
+			for info in messages.infos
+				p.info #{info}
+
+		#survey
+			form(method='post')
+				label(for='name') Survey Name:
+				input(type='text',name='name',id='name', value=survey.name)
+
+				label(for='owner') Survey Owner:
+				input(type='text',name='owner',id='owner', value= (survey?(survey.owner?survey.owner:''):''))
+
+				label(for='maxResponses') Max Responses:
+				input(type='text',name='maxResponses',id='maxResponses', value= (survey?(survey.maxResponses?survey.maxResponses:''):''))
+
+				label(for='campaign') Campaign:
+				input(type='text',name='campaign',id='campaign', value= (survey?(survey.campaign?survey.campaign:''):''))
+
+				label(for='costCenterId') Cost Center Id:
+				input(type='text',name='costCenterId',id='costCenterId', value= (survey?(survey.costCenterId?survey.costCenterId:''):''))
+
+				label(for='netWorth') Net Worth:
+				input(type='text',name='netWorth',id='netWorth', value= (survey?(survey.netWorth?survey.netWorth:''):''))
+
+				input(type='submit', name='op_save', value='Save Changes')
+				input(type='submit', name='op_cancel', value='Cancel Edits')
+				input(type='submit', name='op_addQuestion', value='Add Question')
+
+				if survey.questions
+					each question, q_idx in survey.questions
+						br
+
+						input(type='submit', name=('op_removeQuestion'+ q_idx), value='Remove Question')
+
+						label(for=('question'+ q_idx)) Question #{q_idx}
+						input(type='text',name=('question'+ q_idx),id=('question' + q_idx), value=(question.text))
+
+						each answer, a_idx in question.answers
+							label(for=('answer'+ q_idx + a_idx)) Answer #{a_idx}
+							input(type='text',name=('answer'+ q_idx + a_idx),id=('answer' + q_idx + a_idx), value=answer)
+
+				br
