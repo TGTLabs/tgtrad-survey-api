@@ -7,9 +7,9 @@ var Survey = mongoose.model('Survey');
  *  REST Endpoints
  *********************/
 function register(server) {
-  server.get("/survey/:id", getSurveyById);
   server.get("/surveys", getSurveys);
-  server.post("/postSurvey", postSurvey);
+  server.get("/survey/:id", getSurveyById);
+  server.post("/survey", addSurvey);
 }
 
 /*********************
@@ -43,10 +43,10 @@ var getSurveys = function (req, res, next) {
   Survey.find({}).lean().exec(function (err, surveys) {
     if (err) {
       res.status(400);
-      res.send({ message: err.message});
+      res.send({ message: err.message });
     } else if (!surveys) {
       res.status(404);
-      res.send({message: "Not found"});
+      res.send({ message: "Not found" });
     } else {
       res.send(surveys);
     }
@@ -55,7 +55,7 @@ var getSurveys = function (req, res, next) {
   });
 };
 
-var postSurvey = function (req, res, next) {
+var addSurvey = function (req, res, next) {
   res.cache('public', {maxAge: 300});
 
   var newSurvey = {
@@ -64,11 +64,18 @@ var postSurvey = function (req, res, next) {
     maxResponses: req.body.maxResponses,
     campaign: req.body.campaign,
     costCenterId: req.body.costCenterId,
-    netWorth: req.body.netWorth
+    netWorth: req.body.netWorth,
+    questions: req.body.questions
   };
 
   Survey.create(newSurvey, function (err, survey) {
-    res.send(survey);
+    if (err) {
+      res.status(400);
+      res.send({ message: err.message });
+    } else {
+      res.status(201);
+      res.send(survey);
+    }
 
     return next();
   });
