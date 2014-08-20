@@ -10,6 +10,7 @@ function register(server) {
   server.get("/surveys", getSurveys);
   server.get("/survey/:id", getSurveyById);
   server.post("/survey", addSurvey);
+  server.del("/survey/:id", removeSurveyById);
 }
 
 /*********************
@@ -31,6 +32,28 @@ var getSurveyById = function (req, res, next) {
       res.send({message: "Not found"});
     } else {
       res.send(survey);
+    }
+
+    return next();
+  });
+};
+
+var removeSurveyById = function (req, res, next) {
+  res.cache('public', { maxAge: 300 });
+
+  Survey.findByIdAndRemove(req.params.id).lean().exec(function (err, survey) {
+    if (err) {
+      res.status(400);
+      if (err.name && err.name === "CastError") {
+        res.send({ message: 'Bad id'});
+      } else {
+        res.send({ message: err.message});
+      }
+    } else if (!survey) {
+      res.status(404);
+      res.send({message: "Not found"});
+    } else {
+      res.send({message: "removed"});
     }
 
     return next();
