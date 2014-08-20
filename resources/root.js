@@ -19,4 +19,3 @@ var getVersion = function (req, res, next) {
 module.exports = {
   getVersion: getVersion
 };
-
