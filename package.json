@@ -2,7 +2,7 @@
   "name": "tgtrad-survey-api",
   "version": "0.0.0",
   "description": "Target RAD Survey API application",
-  "main": "app.js",
+  "main": "rest.js",
   "engines": {
     "node": "0.10.29"
   },
