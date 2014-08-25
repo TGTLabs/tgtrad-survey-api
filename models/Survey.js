@@ -8,14 +8,19 @@ var Survey = new Schema({
   campaign: String,
   costCenterId: String,
   netWorth: Number,
-  questions: [
-    {
-      text: String,
-      answers: [String]
-    },
-  ]
+  logoUrl: String,
+  status: String, //Draft, Published, Deactivated, Done
+  questions: [{
+    text: String,
+    answers: [String]
+  }, ]
 });
 
-Survey.index({ name: 1, owner: 1 }, { unique: true });
+Survey.index({
+  name: 1,
+  owner: 1
+}, {
+  unique: true
+});
 
 module.exports = mongoose.model('Survey', Survey);

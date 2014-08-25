@@ -7,13 +7,11 @@ var User = new Schema({
   balance: Number,
   score: Number,
   password: String,
-  history: [
-    {
-      surveyId: String,
-      completed: String,
-      giftcardId: String
-    }
-  ]
+  history: [{
+    surveyId: String,
+    completed: String,
+    giftcardId: String
+  }]
 });
 
 module.exports = mongoose.model('User', User);

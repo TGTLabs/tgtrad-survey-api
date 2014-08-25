@@ -19,20 +19,28 @@ function register(server) {
 /*********************
  *  Resource functions
  *********************/
-var getSurveyById = function (req, res, next) {
-  res.cache('public', { maxAge: 300 });
+var getSurveyById = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
-  Survey.findById(req.params.id).lean().exec(function (err, survey) {
+  Survey.findById(req.params.id).lean().exec(function(err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
-        res.send({ message: 'Bad id'});
+        res.send({
+          message: 'Bad id'
+        });
       } else {
-        res.send({ message: err.message});
+        res.send({
+          message: err.message
+        });
       }
     } else if (!survey) {
       res.status(404);
-      res.send({message: "Not found"});
+      res.send({
+        message: "Not found"
+      });
     } else {
       res.send(survey);
     }
@@ -41,20 +49,28 @@ var getSurveyById = function (req, res, next) {
   });
 };
 
-var removeSurveyById = function (req, res, next) {
-  res.cache('public', { maxAge: 300 });
+var removeSurveyById = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
-  Survey.findByIdAndRemove(req.params.id).lean().exec(function (err, survey) {
+  Survey.findByIdAndRemove(req.params.id).lean().exec(function(err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
-        res.send({ message: 'Bad id'});
+        res.send({
+          message: 'Bad id'
+        });
       } else {
-        res.send({ message: err.message});
+        res.send({
+          message: err.message
+        });
       }
     } else if (!survey) {
       res.status(404);
-      res.send({message: "Not found"});
+      res.send({
+        message: "Not found"
+      });
     } else {
       res.send(survey);
     }
@@ -63,16 +79,22 @@ var removeSurveyById = function (req, res, next) {
   });
 };
 
-var getSurveys = function (req, res, next) {
-  res.cache('public', { maxAge: 300 });
+var getSurveys = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
-  Survey.find({}).lean().exec(function (err, surveys) {
+  Survey.find({}).lean().exec(function(err, surveys) {
     if (err) {
       res.status(400);
-      res.send({ message: err.message });
+      res.send({
+        message: err.message
+      });
     } else if (!surveys) {
       res.status(404);
-      res.send({ message: "Not found" });
+      res.send({
+        message: "Not found"
+      });
     } else {
       res.send(surveys);
     }
@@ -81,27 +103,37 @@ var getSurveys = function (req, res, next) {
   });
 };
 
-var updateSurveyById = function (req, res, next) {
-  res.cache('public', {maxAge: 300});
+var updateSurveyById = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
   if (!req.body) {
     res.status(400);
-    res.send({message: 'Missing body'});
+    res.send({
+      message: 'Missing body'
+    });
 
     return next();
   }
 
-  Survey.findById(req.params.id, function (err, survey) {
+  Survey.findById(req.params.id, function(err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
-        res.send({ message: 'Bad id'});
+        res.send({
+          message: 'Bad id'
+        });
       } else {
-        res.send({ message: err.message});
+        res.send({
+          message: err.message
+        });
       }
     } else if (!survey) {
       res.status(404);
-      res.send({message: "Not found"});
+      res.send({
+        message: "Not found"
+      });
     } else {
 
       // set the data from the request onto the existing object
@@ -112,11 +144,15 @@ var updateSurveyById = function (req, res, next) {
       survey.costCenterId = req.body.costCenterId;
       survey.netWorth = req.body.netWorth;
       survey.questions = req.body.questions;
+      survey.logoUrl = req.body.logoUrl;
+      survey.status = req.body.status;
 
-      survey.save(function (err, survey) {
+      survey.save(function(err, survey) {
         if (err) {
           res.status(400);
-          res.send({message: err.message});
+          res.send({
+            message: err.message
+          });
         } else {
           res.send(survey);
         }
@@ -129,27 +165,37 @@ var updateSurveyById = function (req, res, next) {
   });
 };
 
-var patchSurveyById = function (req, res, next) {
-  res.cache('public', {maxAge: 300});
+var patchSurveyById = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
   if (!req.body) {
     res.status(400);
-    res.send({message: 'Missing body'});
+    res.send({
+      message: 'Missing body'
+    });
 
     return next();
   }
 
-  Survey.findById(req.params.id, function (err, survey) {
+  Survey.findById(req.params.id, function(err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
-        res.send({ message: 'Bad id'});
+        res.send({
+          message: 'Bad id'
+        });
       } else {
-        res.send({ message: err.message});
+        res.send({
+          message: err.message
+        });
       }
     } else if (!survey) {
       res.status(404);
-      res.send({message: "Not found"});
+      res.send({
+        message: "Not found"
+      });
     } else {
       // set the data from the request onto the existing object
       patchField(survey, "name", req.body.name);
@@ -159,11 +205,15 @@ var patchSurveyById = function (req, res, next) {
       patchField(survey, "netWorth", req.body.netWorth);
       patchField(survey, "campaign", req.body.campaign);
       patchField(survey, "questions", req.body.questions);
+      patchField(survey, "logoUrl", req.body.logoUrl);
+      patchField(survey, "status", req.body.status);
 
-      survey.save(function (err, survey) {
+      survey.save(function(err, survey) {
         if (err) {
           res.status(400);
-          res.send({message: err.message});
+          res.send({
+            message: err.message
+          });
         } else {
           res.send(survey);
         }
@@ -176,7 +226,7 @@ var patchSurveyById = function (req, res, next) {
   });
 };
 
-var patchField = function (object, fieldName, value) {
+var patchField = function(object, fieldName, value) {
   if (_.isNull(value)) {
     object[fieldName] = undefined;
   } else if (value) {
@@ -184,12 +234,16 @@ var patchField = function (object, fieldName, value) {
   }
 };
 
-var addSurvey = function (req, res, next) {
-  res.cache('public', {maxAge: 300});
+var addSurvey = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
   if (!req.body) {
     res.status(400);
-    res.send({message: 'Missing body'});
+    res.send({
+      message: 'Missing body'
+    });
 
     return next();
   }
@@ -201,13 +255,17 @@ var addSurvey = function (req, res, next) {
     campaign: req.body.campaign,
     costCenterId: req.body.costCenterId,
     netWorth: req.body.netWorth,
-    questions: req.body.questions
+    questions: req.body.questions,
+    logoUrl: req.body.logoUrl,
+    status: req.body.status
   };
 
-  Survey.create(newSurvey, function (err, survey) {
+  Survey.create(newSurvey, function(err, survey) {
     if (err) {
       res.status(400);
-      res.send({ message: err.message });
+      res.send({
+        message: err.message
+      });
     } else {
       res.status(201);
       res.send(survey);
