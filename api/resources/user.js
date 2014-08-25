@@ -1,31 +1,31 @@
 "use strict";
 
 var mongoose = require("mongoose");
-var CompletedSurvey = mongoose.model('CompletedSurvey');
+var User = mongoose.model('User');
 var _ = require("lodash");
 
 /*********************
  *  REST Endpoints
  *********************/
 function register(server) {
-  server.get("/completedSurveys", getCompletedSurveys);
-  server.get("/completedSurvey/:id", getCompletedSurveyById);
-  server.post("/completedSurvey", postSurvey);
-  server.del("/completedSurvey/:id", removeCompletedSurveyById);
-  server.put("/completedSurvey/:id", updateCompletedSurveyById);
-  server.patch("/completedSurvey/:id", patchCompletedSurveyById);
+  server.get("/users", getUsers);
+  server.get("/user/:id", getUserById);
+  server.post("/user", postUser);
+  server.del("/user/:id", removeUserById);
+  server.put("/user/:id", updateUserById);
+  server.patch("/user/:id", patchUserById);
 }
 
 /*********************
  *  Resource functions
  *********************/
 
-var getCompletedSurveyById = function(req, res, next) {
+var getUserById = function(req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
 
-  CompletedSurvey.findById(req.params.id).lean().exec(function(err, survey) {
+  User.findById(req.params.id).lean().exec(function(err, user) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -37,38 +37,38 @@ var getCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!user) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
-      res.send(survey);
+      res.send(user);
     }
 
     return next();
   });
 };
 
-var getCompletedSurveys = function (req, res, next) {
+var getUsers = function (req, res, next) {
   res.cache('public', { maxAge: 300 });
 
-  CompletedSurvey.find({}).lean().exec(function (err, surveys) {
+  User.find({}).lean().exec(function (err, users) {
     if (err) {
       res.status(400);
       res.send({ message: err.message });
-    } else if (!surveys) {
+    } else if (!users) {
       res.status(404);
       res.send({ message: "Not found" });
     } else {
-      res.send(surveys);
+      res.send(users);
     }
 
     return next();
   });
 };
 
-var postSurvey = function(req, res, next) {
+var postUser = function(req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -82,14 +82,16 @@ var postSurvey = function(req, res, next) {
     return next();
   }
 
-  var completedSurvey = {
-    surveyId: req.body.surveyId,
+  var user = {
     userId: req.body.userId,
-    completed: req.body.completed,
-    results: req.body.results
+    email: req.body.email,
+    balance: req.body.balance,
+    password: req.body.password,
+    score: req.body.score,
+    history: req.body.history
   };
 
-  CompletedSurvey.create(completedSurvey, function(err, survey) {
+  User.create(user, function(err, user) {
     if (err) {
       res.status(400);
       res.send({
@@ -97,20 +99,20 @@ var postSurvey = function(req, res, next) {
       });
     } else {
       res.status(201);
-      res.send(survey);
+      res.send(user);
     }
 
     return next();
   });
 };
 
-var removeCompletedSurveyById = function(req, res, next) {
+var removeUserById = function(req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
 
-  CompletedSurvey.findByIdAndRemove(req.params.id).lean().exec(function(err,
-    survey) {
+  User.findByIdAndRemove(req.params.id).lean().exec(function(err,
+    user) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -122,19 +124,19 @@ var removeCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!user) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
-      res.send(survey);
+      res.send(user);
     }
     return next();
   });
 };
 
-var updateCompletedSurveyById = function(req, res, next) {
+var updateUserById = function(req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -148,7 +150,7 @@ var updateCompletedSurveyById = function(req, res, next) {
     return next();
   }
 
-  CompletedSurvey.findById(req.params.id, function(err, survey) {
+  User.findById(req.params.id, function(err, user) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -160,7 +162,7 @@ var updateCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!user) {
       res.status(404);
       res.send({
         message: "Not found"
@@ -168,19 +170,21 @@ var updateCompletedSurveyById = function(req, res, next) {
     } else {
 
       // set the data from the request onto the existing object
-      survey.surveyId = req.body.surveyId;
-      survey.userId = req.body.userId;
-      survey.completed = req.body.completed;
-      survey.results = req.body.results;
+      user.userId = req.body.userId;
+      user.email = req.body.email;
+      user.balance = req.body.balance;
+      user.password = req.body.password;
+      user.score = req.body.score;
+      user.history = req.body.history;
 
-      survey.save(function(err, survey) {
+      user.save(function(err, user) {
         if (err) {
           res.status(400);
           res.send({
             message: err.message
           });
         } else {
-          res.send(survey);
+          res.send(user);
         }
 
         return next();
@@ -191,7 +195,7 @@ var updateCompletedSurveyById = function(req, res, next) {
   });
 };
 
-var patchCompletedSurveyById = function(req, res, next) {
+var patchUserById = function(req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -205,7 +209,7 @@ var patchCompletedSurveyById = function(req, res, next) {
     return next();
   }
 
-  CompletedSurvey.findById(req.params.id, function(err, survey) {
+  User.findById(req.params.id, function(err, user) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -217,26 +221,28 @@ var patchCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!user) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
       // set the data from the request onto the existing object
-      patchField(survey, "surveyId", req.body.surveyId);
-      patchField(survey, "userId", req.body.userId);
-      patchField(survey, "completed", req.body.completed);
-      patchField(survey, "results", req.body.results);
+      patchField(user, "userId", req.body.userId);
+      patchField(user, "email", req.body.email);
+      patchField(user, "balance", req.body.balance);
+      patchField(user, "password", req.body.password);
+      patchField(user, "score", req.body.score);
+      patchField(user, "history", req.body.history);
 
-      survey.save(function(err, survey) {
+      user.save(function(err, user) {
         if (err) {
           res.status(400);
           res.send({
             message: err.message
           });
         } else {
-          res.send(survey);
+          res.send(user);
         }
 
         return next();
