@@ -25,7 +25,8 @@ var getCompletedSurveyById = function(req, res, next) {
     maxAge: 300
   });
 
-  CompletedSurvey.findById(req.params.id).lean().exec(function(err, survey) {
+  CompletedSurvey.findById(req.params.id).lean().exec(function(err,
+    completedSurvey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -37,29 +38,35 @@ var getCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!completedSurvey) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
-      res.send(survey);
+      res.send(completedSurvey);
     }
 
     return next();
   });
 };
 
-var getCompletedSurveys = function (req, res, next) {
-  res.cache('public', { maxAge: 300 });
+var getCompletedSurveys = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
-  CompletedSurvey.find({}).lean().exec(function (err, surveys) {
+  CompletedSurvey.find({}).lean().exec(function(err, surveys) {
     if (err) {
       res.status(400);
-      res.send({ message: err.message });
+      res.send({
+        message: err.message
+      });
     } else if (!surveys) {
       res.status(404);
-      res.send({ message: "Not found" });
+      res.send({
+        message: "Not found"
+      });
     } else {
       res.send(surveys);
     }
@@ -82,26 +89,35 @@ var postSurvey = function(req, res, next) {
     return next();
   }
 
-  var completedSurvey = {
+  var newCompletedSurvey = {
     surveyId: req.body.surveyId,
     userId: req.body.userId,
     completed: req.body.completed,
     results: req.body.results
   };
+  var completedSurvey = new CompletedSurvey(newCompletedSurvey);
+  var validateErr = completedSurvey.joiValidate(completedSurvey).error;
+  if (validateErr === null) {
 
-  CompletedSurvey.create(completedSurvey, function(err, survey) {
-    if (err) {
-      res.status(400);
-      res.send({
-        message: err.message
-      });
-    } else {
-      res.status(201);
-      res.send(survey);
-    }
+    CompletedSurvey.create(completedSurvey, function(err, completedSurvey) {
+      if (err) {
+        res.status(400);
+        res.send({
+          message: err.message
+        });
+      } else {
+        res.status(201);
+        res.send(completedSurvey);
+      }
 
+      return next();
+    });
+  } else {
+
+    res.status(406);
+    res.send(validateErr);
     return next();
-  });
+  }
 };
 
 var removeCompletedSurveyById = function(req, res, next) {
@@ -110,7 +126,7 @@ var removeCompletedSurveyById = function(req, res, next) {
   });
 
   CompletedSurvey.findByIdAndRemove(req.params.id).lean().exec(function(err,
-    survey) {
+    completedSurvey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -122,13 +138,13 @@ var removeCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!completedSurvey) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
-      res.send(survey);
+      res.send(completedSurvey);
     }
     return next();
   });
@@ -148,7 +164,8 @@ var updateCompletedSurveyById = function(req, res, next) {
     return next();
   }
 
-  CompletedSurvey.findById(req.params.id, function(err, survey) {
+
+  CompletedSurvey.findById(req.params.id, function(err, completedSurvey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -160,7 +177,7 @@ var updateCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!completedSurvey) {
       res.status(404);
       res.send({
         message: "Not found"
@@ -168,23 +185,30 @@ var updateCompletedSurveyById = function(req, res, next) {
     } else {
 
       // set the data from the request onto the existing object
-      survey.surveyId = req.body.surveyId;
-      survey.userId = req.body.userId;
-      survey.completed = req.body.completed;
-      survey.results = req.body.results;
+      completedSurvey.surveyId = req.body.surveyId;
+      completedSurvey.userId = req.body.userId;
+      completedSurvey.completed = req.body.completed;
+      completedSurvey.results = req.body.results;
 
-      survey.save(function(err, survey) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(survey);
-        }
+      var validateErr = completedSurvey.joiValidate(completedSurvey).error;
+      if (validateErr === null) {
+        completedSurvey.save(function(err, completedSurvey) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(completedSurvey);
+          }
 
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();
@@ -205,7 +229,7 @@ var patchCompletedSurveyById = function(req, res, next) {
     return next();
   }
 
-  CompletedSurvey.findById(req.params.id, function(err, survey) {
+  CompletedSurvey.findById(req.params.id, function(err, completedSurvey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -217,30 +241,38 @@ var patchCompletedSurveyById = function(req, res, next) {
           message: err.message
         });
       }
-    } else if (!survey) {
+    } else if (!completedSurvey) {
       res.status(404);
       res.send({
         message: "Not found"
       });
     } else {
       // set the data from the request onto the existing object
-      patchField(survey, "surveyId", req.body.surveyId);
-      patchField(survey, "userId", req.body.userId);
-      patchField(survey, "completed", req.body.completed);
-      patchField(survey, "results", req.body.results);
+      patchField(completedSurvey, "surveyId", req.body.surveyId);
+      patchField(completedSurvey, "userId", req.body.userId);
+      patchField(completedSurvey, "completed", req.body.completed);
+      patchField(completedSurvey, "results", req.body.results);
 
-      survey.save(function(err, survey) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(survey);
-        }
+      var validateErr = completedSurvey.joiValidate(completedSurvey).error;
+      if (validateErr === null) {
 
+        completedSurvey.save(function(err, completedSurvey) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(completedSurvey);
+          }
+
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();

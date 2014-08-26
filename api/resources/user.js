@@ -50,16 +50,22 @@ var getUserById = function(req, res, next) {
   });
 };
 
-var getUsers = function (req, res, next) {
-  res.cache('public', { maxAge: 300 });
+var getUsers = function(req, res, next) {
+  res.cache('public', {
+    maxAge: 300
+  });
 
-  User.find({}).lean().exec(function (err, users) {
+  User.find({}).lean().exec(function(err, users) {
     if (err) {
       res.status(400);
-      res.send({ message: err.message });
+      res.send({
+        message: err.message
+      });
     } else if (!users) {
       res.status(404);
-      res.send({ message: "Not found" });
+      res.send({
+        message: "Not found"
+      });
     } else {
       res.send(users);
     }
@@ -82,7 +88,7 @@ var postUser = function(req, res, next) {
     return next();
   }
 
-  var user = {
+  var newUser = {
     userId: req.body.userId,
     email: req.body.email,
     balance: req.body.balance,
@@ -90,20 +96,28 @@ var postUser = function(req, res, next) {
     score: req.body.score,
     history: req.body.history
   };
+  var user = new User(newUser);
+  var validateErr = user.joiValidate(user).error;
 
-  User.create(user, function(err, user) {
-    if (err) {
-      res.status(400);
-      res.send({
-        message: err.message
-      });
-    } else {
-      res.status(201);
-      res.send(user);
-    }
+  if (validateErr === null) {
+    User.create(newUser, function(err, user) {
+      if (err) {
+        res.status(400);
+        res.send({
+          message: err.message
+        });
+      } else {
+        res.status(201);
+        res.send(user);
+      }
 
+      return next();
+    });
+  } else {
+    res.status(406);
+    res.send(validateErr);
     return next();
-  });
+  }
 };
 
 var removeUserById = function(req, res, next) {
@@ -177,18 +191,25 @@ var updateUserById = function(req, res, next) {
       user.score = req.body.score;
       user.history = req.body.history;
 
-      user.save(function(err, user) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(user);
-        }
+      var validateErr = user.joiValidate(user).error;
+      if (validateErr === null) {
+        user.save(function(err, user) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(user);
+          }
 
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();
@@ -235,18 +256,25 @@ var patchUserById = function(req, res, next) {
       patchField(user, "score", req.body.score);
       patchField(user, "history", req.body.history);
 
-      user.save(function(err, user) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(user);
-        }
+      var validateErr = user.joiValidate(user).error;
+      if (validateErr === null) {
+        user.save(function(err, user) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(user);
+          }
 
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();

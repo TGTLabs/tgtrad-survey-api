@@ -39,7 +39,7 @@ Survey.methods.joiValidate = function(obj) {
     status: Joi.string(),
     questions: Joi.array()
 	});
-	return Joi.validate(obj, schema, {allowUnknown:true});
+	return Joi.validate(obj, schema, {allowUnknown:true,abortEarly:false});
 };
 
 
