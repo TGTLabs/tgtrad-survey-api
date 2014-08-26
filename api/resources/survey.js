@@ -147,18 +147,25 @@ var updateSurveyById = function(req, res, next) {
       survey.logoUrl = req.body.logoUrl;
       survey.status = req.body.status;
 
-      survey.save(function(err, survey) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(survey);
-        }
+      var validateErr = survey.joiValidate(survey).error;
+      if (validateErr === null) {
+        survey.save(function(err, survey) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(survey);
+          }
 
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();
