@@ -20,6 +20,7 @@
     "express": "^4.8.4",
     "express-session": "^1.7.6",
     "jade": "^1.5.0",
+    "joi": "^4.6.2",
     "lodash": "^2.4.1",
     "mongoose": "^3.8.15",
     "mongoose-q": "0.0.10",

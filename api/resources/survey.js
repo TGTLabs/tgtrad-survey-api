@@ -208,18 +208,25 @@ var patchSurveyById = function(req, res, next) {
       patchField(survey, "logoUrl", req.body.logoUrl);
       patchField(survey, "status", req.body.status);
 
-      survey.save(function(err, survey) {
-        if (err) {
-          res.status(400);
-          res.send({
-            message: err.message
-          });
-        } else {
-          res.send(survey);
-        }
+      var validateErr = survey.joiValidate(survey).error;
+      if (validateErr === null) {
+        survey.save(function(err, survey) {
+          if (err) {
+            res.status(400);
+            res.send({
+              message: err.message
+            });
+          } else {
+            res.send(survey);
+          }
 
+          return next();
+        });
+      } else {
+        res.status(406);
+        res.send(validateErr);
         return next();
-      });
+      }
     }
 
     return next();
@@ -259,20 +266,26 @@ var addSurvey = function(req, res, next) {
     logoUrl: req.body.logoUrl,
     status: req.body.status
   };
+  var survey = new Survey(newSurvey);
+  var validateErr = survey.joiValidate(survey);
+  if (validateErr === null) {
+    Survey.create(newSurvey, function(err, survey) {
+      if (err) {
+        res.status(400);
+        res.send({
+          message: err.message
+        });
+      } else {
+        res.status(201);
+        res.send(survey);
+      }
 
-  Survey.create(newSurvey, function(err, survey) {
-    if (err) {
-      res.status(400);
-      res.send({
-        message: err.message
-      });
-    } else {
-      res.status(201);
-      res.send(survey);
-    }
-
-    return next();
-  });
+      return next();
+    });
+  } else {
+    res.status(406);
+    res.send(validateErr);
+  }
 };
 
 module.exports = {
