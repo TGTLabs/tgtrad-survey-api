@@ -13,6 +13,7 @@ Usages
 
 adding to your repository
  - git remote add shared <repo url> 
+ - git subtree add --prefix=shared --squash shared master
  
 grabbing latest changes
  - git subtree pull --prefix=shared --squash shared master
