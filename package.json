@@ -2,7 +2,7 @@
   "name": "tgtrad-survey-api",
   "version": "0.0.0",
   "description": "Target RAD Survey API application",
-  "main": "rest.js",
+  "main": "app.js",
   "engines": {
     "node": "0.10.29"
   },
@@ -13,23 +13,13 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.6.4",
-    "compression": "^1.0.11",
-    "connect-flash": "^0.1.1",
-    "cookie-parser": "^1.3.2",
     "dotenv": "^0.4.0",
-    "express": "^4.8.4",
-    "express-session": "^1.7.6",
-    "jade": "^1.5.0",
     "joi": "^4.6.2",
     "lodash": "^2.4.1",
     "mongoose": "^3.8.15",
-    "mongoose-q": "0.0.10",
-    "morgan": "^1.2.2",
     "node-uuid": "^1.4.1",
-    "passport": "^0.2.0",
     "q": "^1.0.1",
-    "restify": "^2.8.2",
-    "serve-static": "^1.5.2"
+    "restify": "^2.8.2"
   },
   "devDependencies": {
     "chai": "^1.9.1",
