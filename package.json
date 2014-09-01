@@ -14,12 +14,14 @@
   "dependencies": {
     "body-parser": "^1.6.4",
     "dotenv": "^0.4.0",
+    "isemail": "^1.1.1",
     "joi": "^4.6.2",
     "lodash": "^2.4.1",
     "mongoose": "^3.8.15",
     "node-uuid": "^1.4.1",
     "q": "^1.0.1",
-    "restify": "^2.8.2"
+    "restify": "^2.8.2",
+    "restify-mongoose": "^0.2.2"
   },
   "devDependencies": {
     "chai": "^1.9.1",

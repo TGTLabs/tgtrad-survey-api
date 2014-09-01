@@ -4,7 +4,7 @@
 var should = require('chai').should();
 var supertest = require('supertest');
 
-var server = require('../../lib/server')('mocha-test-server');
+var server = require('../../lib/restify')('mocha-test-server');
 require('../../api/resources/root').register(server);
 
 describe("/root resources", function () {
