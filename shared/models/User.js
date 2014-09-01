@@ -1,34 +1,22 @@
 "use strict";
 
 var mongoose = require('mongoose');
+var validators = require("../lib/mongoose/validators");
 var Schema = mongoose.Schema;
-var Joi = require('joi');
 
+// custom validators
+var emailAddress = [validators.isEmail, "Path '{PATH}' is not an valid email address"];
+
+// schema
 var User = new Schema({
-  userId: String,
-  email: String,
+  email: {type: String, required: true, validate: emailAddress},
   balance: Number,
   score: Number,
-  password: String,
   history: [{
     surveyId: String,
     completed: String,
     giftcardId: String
   }]
 });
-
-
-User.methods.joiValidate = function(obj) {
-
-  var schema = Joi.object().keys({
-    userId: Joi.string().min(24).max(24).required(),
-    email: Joi.string().email().required(),
-    balance: Joi.number().integer().min(0).max(100).required(),
-    score: Joi.number().integer().min(0).max(100).required(),
-    password: Joi.string().min(5).max(24).required(),
-    history: Joi.array()
-  });
-  return Joi.validate(obj, schema, {allowUnknown:true,abortEarly:false});
-};
 
 module.exports = mongoose.model('User', User);

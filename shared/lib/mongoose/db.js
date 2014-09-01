@@ -1,6 +1,6 @@
 "use strict";
 
-var env = require('./env');
+var env = require('./../env');
 var mongoose = require('mongoose');
 
 var uri = env.str('TGTRAD_MONGODB_URL');
