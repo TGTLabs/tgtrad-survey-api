@@ -8,6 +8,14 @@ This is a project that should not be directly modified.  Instead modify one of t
 This repo was created as a bare repository
 http://www.gitguys.com/topics/shared-repositories-should-be-bare-repositories/
 
+Work Flow
+---
+1. Make changes to shared directory
+2. Commit those changes locally
+3. Follow steps below to push changes to shared subtree BEFORE pushing to origin master
+4. Then push to origin master
+5. On other repos that require the shared folder pull down the changes and push the new ref to origin master
+
 Usages
 ---
 
