@@ -5,13 +5,15 @@ var dotenv = require('dotenv');
 dotenv.load();
 
 var thisPackage = require('./package');
-var server = require('./lib/server')(thisPackage.description);
+var server = require('./lib/restify')(thisPackage.description);
 
 // INIT DB Connection
-require('./lib/db');
+require('./shared/lib/mongoose/db');
 
 // SETUP THE MODELS
 require('./shared/models');
+
+var restifyMongoose = require('restify-mongoose');
 
 /*********************
  *  REST Endpoints

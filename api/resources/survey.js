@@ -19,12 +19,12 @@ function register(server) {
 /*********************
  *  Resource functions
  *********************/
-var getSurveyById = function(req, res, next) {
+var getSurveyById = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
 
-  Survey.findById(req.params.id).lean().exec(function(err, survey) {
+  Survey.findById(req.params.id).lean().exec(function (err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -49,12 +49,12 @@ var getSurveyById = function(req, res, next) {
   });
 };
 
-var removeSurveyById = function(req, res, next) {
+var removeSurveyById = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
 
-  Survey.findByIdAndRemove(req.params.id).lean().exec(function(err, survey) {
+  Survey.findByIdAndRemove(req.params.id).lean().exec(function (err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -79,12 +79,12 @@ var removeSurveyById = function(req, res, next) {
   });
 };
 
-var getSurveys = function(req, res, next) {
+var getSurveys = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
 
-  Survey.find({}).lean().exec(function(err, surveys) {
+  Survey.find({}).lean().exec(function (err, surveys) {
     if (err) {
       res.status(400);
       res.send({
@@ -103,7 +103,7 @@ var getSurveys = function(req, res, next) {
   });
 };
 
-var updateSurveyById = function(req, res, next) {
+var updateSurveyById = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -117,7 +117,7 @@ var updateSurveyById = function(req, res, next) {
     return next();
   }
 
-  Survey.findById(req.params.id, function(err, survey) {
+  Survey.findById(req.params.id, function (err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -147,32 +147,25 @@ var updateSurveyById = function(req, res, next) {
       survey.logoUrl = req.body.logoUrl;
       survey.status = req.body.status;
 
-      var validateErr = survey.joiValidate(survey).error;
-      if (validateErr === null) {
-        survey.save(function(err, survey) {
-          if (err) {
-            res.status(400);
-            res.send({
-              message: err.message
-            });
-          } else {
-            res.send(survey);
-          }
+      survey.save(function (err, newSurvey) {
+        if (err) {
+          res.status(400);
+          res.send({
+            message: err.message
+          });
+        } else {
+          res.send(newSurvey);
+        }
 
-          return next();
-        });
-      } else {
-        res.status(406);
-        res.send(validateErr);
         return next();
-      }
+      });
     }
 
     return next();
   });
 };
 
-var patchSurveyById = function(req, res, next) {
+var patchSurveyById = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -186,7 +179,7 @@ var patchSurveyById = function(req, res, next) {
     return next();
   }
 
-  Survey.findById(req.params.id, function(err, survey) {
+  Survey.findById(req.params.id, function (err, survey) {
     if (err) {
       res.status(400);
       if (err.name && err.name === "CastError") {
@@ -215,32 +208,25 @@ var patchSurveyById = function(req, res, next) {
       patchField(survey, "logoUrl", req.body.logoUrl);
       patchField(survey, "status", req.body.status);
 
-      var validateErr = survey.joiValidate(survey).error;
-      if (validateErr === null) {
-        survey.save(function(err, survey) {
-          if (err) {
-            res.status(400);
-            res.send({
-              message: err.message
-            });
-          } else {
-            res.send(survey);
-          }
+      survey.save(function (err, newSurvey) {
+        if (err) {
+          res.status(400);
+          res.send({
+            message: err.message
+          });
+        } else {
+          res.send(newSurvey);
+        }
 
-          return next();
-        });
-      } else {
-        res.status(406);
-        res.send(validateErr);
         return next();
-      }
+      });
     }
 
     return next();
   });
 };
 
-var patchField = function(object, fieldName, value) {
+var patchField = function (object, fieldName, value) {
   if (_.isNull(value)) {
     object[fieldName] = undefined;
   } else if (value) {
@@ -248,7 +234,7 @@ var patchField = function(object, fieldName, value) {
   }
 };
 
-var addSurvey = function(req, res, next) {
+var addSurvey = function (req, res, next) {
   res.cache('public', {
     maxAge: 300
   });
@@ -273,26 +259,19 @@ var addSurvey = function(req, res, next) {
     logoUrl: req.body.logoUrl,
     status: req.body.status
   };
-  var survey = new Survey(newSurvey);
-  var validateErr = survey.joiValidate(survey);
-  if (validateErr === null) {
-    Survey.create(newSurvey, function(err, survey) {
-      if (err) {
-        res.status(400);
-        res.send({
-          message: err.message
-        });
-      } else {
-        res.status(201);
-        res.send(survey);
-      }
+  Survey.create(newSurvey, function (err, survey) {
+    if (err) {
+      res.status(400);
+      res.send({
+        message: err.message
+      });
+    } else {
+      res.status(201);
+      res.send(survey);
+    }
 
-      return next();
-    });
-  } else {
-    res.status(406);
-    res.send(validateErr);
-  }
+    return next();
+  });
 };
 
 module.exports = {
