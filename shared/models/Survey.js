@@ -12,11 +12,14 @@ var Survey = new Schema({
   name: { type: String, required: true, trim: true, validate: stringLength },
   owner: { type: String, required: true, trim: true, validate: stringLength },
   maxResponses: { type: Number, required: true, min: 100, max: 1000 },
+  responses: { type: Number, min: 0, max: 1100 },
   campaign: { type: String, required: true, trim: true },
   costCenterId: { type: String, required: true, trim: true},
   netWorth: Number,
   logoUrl: String,
   status: String,
+  startDate: { type: Date, required: true},
+  endDate: { type: Date, required: true},
   questions: [
     {
       text: String,
