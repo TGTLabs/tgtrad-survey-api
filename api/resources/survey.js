@@ -140,12 +140,15 @@ var updateSurveyById = function (req, res, next) {
       survey.name = req.body.name;
       survey.owner = req.body.owner;
       survey.maxResponses = req.body.maxResponses;
+      survey.responses = req.body.responses;
       survey.campaign = req.body.campaign;
       survey.costCenterId = req.body.costCenterId;
       survey.netWorth = req.body.netWorth;
       survey.questions = req.body.questions;
       survey.logoUrl = req.body.logoUrl;
       survey.status = req.body.status;
+      survey.startDate = req.body.startDate;
+      survey.endDate = req.body.endDate;
 
       survey.save(function (err, newSurvey) {
         if (err) {
@@ -201,12 +204,15 @@ var patchSurveyById = function (req, res, next) {
       patchField(survey, "name", req.body.name);
       patchField(survey, "owner", req.body.owner);
       patchField(survey, "maxResponses", req.body.maxResponses);
+      patchField(survey, "responses", req.body.responses);
       patchField(survey, "costCenterId", req.body.costCenterId);
       patchField(survey, "netWorth", req.body.netWorth);
       patchField(survey, "campaign", req.body.campaign);
       patchField(survey, "questions", req.body.questions);
       patchField(survey, "logoUrl", req.body.logoUrl);
       patchField(survey, "status", req.body.status);
+      patchField(survey, "startDate", req.body.startDate);
+      patchField(survey, "endDate", req.body.endDate);
 
       survey.save(function (err, newSurvey) {
         if (err) {
@@ -252,12 +258,15 @@ var addSurvey = function (req, res, next) {
     name: req.body.name,
     owner: req.body.owner,
     maxResponses: req.body.maxResponses,
+    responses: req.body.responses,
     campaign: req.body.campaign,
     costCenterId: req.body.costCenterId,
     netWorth: req.body.netWorth,
     questions: req.body.questions,
     logoUrl: req.body.logoUrl,
-    status: req.body.status
+    status: req.body.status,
+    startDate: req.body.startDate,
+    endDate: req.body.endDate
   };
   Survey.create(newSurvey, function (err, survey) {
     if (err) {

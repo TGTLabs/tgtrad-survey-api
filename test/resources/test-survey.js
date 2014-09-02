@@ -26,6 +26,9 @@ describe("/survey resources", function () {
   sampleSurvey.costCenterId = "someCostCenter";
   sampleSurvey.netWorth = 1000;
   sampleSurvey._id = '53f3ab80432f102a2f06d401';
+  sampleSurvey.responses = 2;
+  sampleSurvey.startDate = new Date();
+  sampleSurvey.endDate = new Date();
 
   describe("POST", function () {
     it("[400] payload missing", function (done) {
@@ -280,6 +283,9 @@ describe("/survey resources", function () {
       updatedSurvey.maxResponses = sampleSurvey.maxResponses;
       updatedSurvey.costCenterId = sampleSurvey.costCenterId;
       updatedSurvey.netWorth = sampleSurvey.netWorth;
+      updatedSurvey.responses = sampleSurvey.responses;
+      updatedSurvey.startDate = sampleSurvey.startDate;
+      updatedSurvey.endDate = sampleSurvey.endDate;
 
       supertest(server)
         .put('/survey/53f3ab80432f102a2f06d401')
@@ -422,6 +428,9 @@ describe("/survey resources", function () {
         survey2.costCenterId = "someCostCenter";
         survey2.netWorth = 1000;
         survey2._id = '53f3ab80432f102a2f06d402';
+        survey2.responses = 4;
+        survey2.startDate = new Date();
+        survey2.endDate = new Date();
 
         Survey.create(survey2, function (err) {
           if (err) {
