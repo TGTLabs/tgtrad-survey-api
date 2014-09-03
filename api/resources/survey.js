@@ -271,9 +271,14 @@ var addSurvey = function (req, res, next) {
   Survey.create(newSurvey, function (err, survey) {
     if (err) {
       res.status(400);
+      if(err.name === "ValidationError"){
+        res.send({error: err});
+      }
+      else{
       res.send({
         message: err.message
       });
+    }
     } else {
       res.status(201);
       res.send(survey);

@@ -22,8 +22,10 @@ var Survey = new Schema({
   endDate: { type: Date, required: true},
   questions: [
     {
-      text: String,
-      answers: [String]
+      title: { type: String, required: true, trim: true, validate: stringLength },
+      _type: { type: String, required: true, enum: ['text', 'image', 'rating'] },
+      text: [String],
+      url: [String]
     },
   ]
 });
