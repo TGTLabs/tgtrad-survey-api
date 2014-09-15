@@ -88,7 +88,6 @@ server.get("/test", passport.authenticate('google', {
 });
 
 // server.get("/test",isAuthenticated, function(req,res,next){
-// console.log("got here yo");
 // res.send("authenticated");
 // });
 
@@ -103,25 +102,21 @@ server.get('/auth/google/return',
   }),
   function(req, res) {
 
-    res.send(req.user.identifier);
     //write email to user database
     //search database for
     //fulfill initial request if there was one ()
+    //how to mark what API call was initially made?  Or double the call?
     var cipher = crypto.createCipher('aes-256-cbc','FortunaMajor');
+    var retryAuth = new Date().getTime() + 600000;
     var xKey = {
       identity: req.user.identifier,
-      retryAuth: "now"
+      retryAuth: retryAuth
     };
     var xKeyString = JSON.stringify(xKey);
     var crypted = cipher.update(xKeyString,'utf8','hex');
     crypted += cipher.final('hex');
     res.send(crypted);
-    var decipher = crypto.createDecipher('aes-256-cbc','FortunaMajor');
-    var dec = decipher.update(crypted,'hex','utf8');
-    dec += decipher.final('utf8');
-    var parseText = JSON.parse(dec);
 
-    // console.log(dec);
   });
 
 
@@ -131,12 +126,3 @@ server.listen(port, function() {
   console.log("%s, version %s. Listening on %s", server.name, thisPackage.version,
     port);
 });
-
-
-function isAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    next();
-  } else {
-    next(new Error(401));
-  }
-}
